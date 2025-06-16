@@ -58,6 +58,8 @@ public class SeccionCursosIntegrationTest {
    }
 
    @Test
+   @Transactional
+   @Rollback
    @Order(2)
     void buscarSeccionPorId() {
        Curso curso = new Curso("Base de datos", "3er nivel de base de datos");
