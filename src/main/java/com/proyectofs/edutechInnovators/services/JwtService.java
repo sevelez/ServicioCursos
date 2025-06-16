@@ -17,7 +17,7 @@ public class JwtService {
     public String generateToken(String username) {
         return JWT.create()
                 .withSubject(username)
-                .withIssuer("cliente-api")
+                .withIssuer("edutechInnovators")
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
                 .sign(algorithm);
@@ -26,7 +26,7 @@ public class JwtService {
 
     public String extractUsername(String token) {
         DecodedJWT decodedJWT = JWT.require(algorithm)
-                .withIssuer("cliente-api")
+                .withIssuer("edutechInnovators")
                 .build()
                 .verify(token);
         return decodedJWT.getSubject();
