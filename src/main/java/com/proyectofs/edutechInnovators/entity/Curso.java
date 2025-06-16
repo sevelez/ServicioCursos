@@ -21,5 +21,14 @@ public class Curso {
 
     @Column(name = "DESCRIPCION")
     private String descripcion;
+
+    public Curso() {
+    }
+
+    public Curso( String nombre, String descripcion) {
+
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
 }
 

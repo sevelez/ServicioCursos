@@ -23,4 +23,11 @@ public class Seccion {
     @JoinColumn(name = "ID_CURSO")
     private Curso curso;
 
+    public Seccion() {
+    }
+
+    public Seccion( String nombreSeccion, Curso curso) {
+        this.nombreSeccion = nombreSeccion;
+        this.curso = curso;
+    }
 }
