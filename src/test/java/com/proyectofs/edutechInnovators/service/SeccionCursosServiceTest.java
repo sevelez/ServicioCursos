@@ -65,5 +65,48 @@ public class SeccionCursosServiceTest {
         verify(seccionRepository, times(1)).findById(10L);
     }
 
+    @Test
+    void eliminarSeccionPorId_existente() {
+        Long id = 10L;
+        when(seccionRepository.existsById(id)).thenReturn(true);
+
+        boolean resultado = seccionService.deleteSeccion(id);
+
+        assertTrue(resultado);
+        verify(seccionRepository, times(1)).existsById(id);
+        verify(seccionRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void actualizarSeccionCurso() {
+        // Arrange
+        Long seccionId = 10L;
+        Long cursoId = 1L;
+
+        Curso cursoExistente = new Curso("Base de datos", "Curso de base de BD");
+        cursoExistente.setId(cursoId);
+
+        Seccion seccionExistente = new Seccion("BDY123", cursoExistente);
+        seccionExistente.setId(seccionId);
+
+        Curso nuevoCurso = new Curso("Redes", "Curso nuevo");
+        nuevoCurso.setId(cursoId);
+
+        Seccion seccionModificada = new Seccion("Sección actualizada", nuevoCurso);
+
+        when(seccionRepository.findById(seccionId)).thenReturn(Optional.of(seccionExistente));
+        when(cursoRepository.findById(cursoId)).thenReturn(Optional.of(nuevoCurso));
+        when(seccionRepository.save(any(Seccion.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Optional<Seccion> resultado = seccionService.updateSeccion(seccionId, seccionModificada);
+
+        assertTrue(resultado.isPresent());
+        assertEquals("Sección actualizada", resultado.get().getNombreSeccion());
+        assertEquals("Redes", resultado.get().getCurso().getNombre());
+
+        verify(seccionRepository, times(1)).findById(seccionId);
+        verify(cursoRepository, times(1)).findById(cursoId);
+        verify(seccionRepository, times(1)).save(any(Seccion.class));
+    }
 
 }

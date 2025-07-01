@@ -25,22 +25,6 @@ public class SeccionCursosIntegrationTest {
     @Autowired
     private CursoRepository cursoRepository;
 
-   /* @Test
-    @Transactional
-    @Rollback
-    @Order(1)
-    void guardarCurso() {
-        Curso curso = new Curso(1L, "Base de datos", "3er nivel de base de datos");
-        //Seccion seccion = new Seccion(1L,"Taller de Base de datos", curso);
-        Curso cursoGuardado = cursoRepository.save(curso);
-        //Seccion seccionGuardada = seccionRepository.save(seccion);
-
-        assertNotNull(cursoGuardado.getId());
-        assertEquals("Base de datos", curso.getNombre());
-        //assertNotNull(seccionGuardada.getId());
-        //assertEquals("Taller de Base de Datos", seccion.getNombreSeccion());
-
-    }*/
    @Test
    @Transactional
    @Rollback
@@ -71,5 +55,57 @@ public class SeccionCursosIntegrationTest {
        assertTrue(seccionEncontrada.isPresent());
        assertEquals("Taller de Base de datos", seccionEncontrada.get().getNombreSeccion());
    }
+
+    @Test
+    @Transactional
+    @Rollback
+    @Order(3)
+    void eliminarCursoYSeccion() {
+        Curso curso = new Curso("Base de datos", "3er nivel de base de datos");
+        Curso cursoGuardado = cursoRepository.save(curso);
+
+        Seccion seccion = new Seccion("Taller de Base de datos", cursoGuardado);
+        Seccion seccionGuardada = seccionRepository.save(seccion);
+
+        assertNotNull(cursoGuardado.getId());
+        assertNotNull(seccionGuardada.getId());
+        assertEquals("Taller de Base de datos", seccionGuardada.getNombreSeccion());
+
+
+        seccionRepository.deleteById(seccionGuardada.getId());
+        cursoRepository.deleteById(cursoGuardado.getId());
+
+        assertFalse(seccionRepository.findById(seccionGuardada.getId()).isPresent());
+        assertFalse(cursoRepository.findById(cursoGuardado.getId()).isPresent());
+
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    @Order(4)
+    void actualizarCursoYSeccion() {
+        Curso curso = new Curso("Base de datos", "3er nivel de base de datos");
+        Curso cursoGuardado = cursoRepository.save(curso);
+
+        Seccion seccion = new Seccion("Taller de Base de datos", cursoGuardado);
+        Seccion seccionGuardada = seccionRepository.save(seccion);
+
+        assertNotNull(cursoGuardado.getId());
+        assertNotNull(seccionGuardada.getId());
+        assertEquals("Taller de Base de datos", seccionGuardada.getNombreSeccion());
+
+        cursoGuardado.setNombre("Base de datos actualizada");
+        cursoGuardado.setDescripcion("Descripción actualizada");
+
+        seccionGuardada.setNombreSeccion("Sección actualizada");
+
+        Curso cursoActualizado = cursoRepository.save(cursoGuardado);
+        Seccion seccionActualizada = seccionRepository.save(seccionGuardada);
+
+        assertEquals("Base de datos actualizada", cursoActualizado.getNombre());
+        assertEquals("Descripción actualizada", cursoActualizado.getDescripcion());
+        assertEquals("Sección actualizada", seccionActualizada.getNombreSeccion());
+    }
 
 }
